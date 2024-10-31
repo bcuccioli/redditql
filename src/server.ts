@@ -1,7 +1,7 @@
 import config from "./config";
-import express from "express";
 import { createHandler } from "graphql-http/lib/use/express";
-import schema from "./schema";
+import express from "express";
+import schema from "./schema/root";
 
 const app = express();
 app.all("/graphql", createHandler({ schema }));
