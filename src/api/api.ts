@@ -9,4 +9,9 @@ export default abstract class Api {
    * a cursor for pagination.
    */
   public abstract uri(cursor: string | null): string;
+
+  /**
+   * Refers to the limit (number of results) requested.
+   */
+  public abstract limit: number;
 }

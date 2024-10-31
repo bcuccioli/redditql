@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLID,
+  GraphQLInt,
 } from "graphql";
 import { Author, Subreddit, Submission } from "./data";
 import { AuthoredApi } from "./api/authored";
@@ -33,8 +34,12 @@ const AuthorType = new GraphQLObjectType<Author>({
     name: { type: GraphQLString },
     submissions: {
       type: new GraphQLList(SubmissionType),
-      resolve: async (author) => {
-        return await getSubmissions(new AuthoredApi(author.name));
+      args: {
+        limit: { type: GraphQLInt },
+      },
+      resolve: async (author, args) => {
+        const { limit } = args;
+        return await getSubmissions(new AuthoredApi(author.name, limit));
       },
     },
   }),
@@ -47,8 +52,12 @@ const SubredditType = new GraphQLObjectType<Subreddit>({
     name: { type: GraphQLString },
     submissions: {
       type: new GraphQLList(SubmissionType),
-      resolve: async (subreddit) => {
-        return await getSubmissions(new NewApi(subreddit.name));
+      args: {
+        limit: { type: GraphQLInt },
+      },
+      resolve: async (subreddit, args) => {
+        const { limit } = args;
+        return await getSubmissions(new NewApi(subreddit.name, limit));
       },
     },
   }),

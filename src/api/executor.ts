@@ -86,6 +86,10 @@ export async function getSubmissions(api: Api) {
 
     submissions = submissions.concat(filtered);
 
+    if (submissions.length >= api.limit) {
+      break;
+    }
+
     if (page.cursor === null) {
       break;
     }
@@ -94,5 +98,7 @@ export async function getSubmissions(api: Api) {
     cursor = page.cursor;
   }
 
-  return submissions;
+  // We may have received more than `limit` results from subsequent `genPage`
+  // calls, in which case we need to slice again here.
+  return submissions.slice(0, api.limit);
 }
