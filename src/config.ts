@@ -7,6 +7,7 @@ const ConfigObjSchema = z.object({
   user_agent: z.string(),
   client_id: z.string(),
   client_secret: z.string(),
+  refresh_token: z.string(),
 });
 
 let cfg_: z.infer<typeof ConfigObjSchema> | null = null;
