@@ -1,5 +1,5 @@
 import Api from "./api";
-import { Submission } from "../data";
+import { Submission } from "../schema/submission";
 import axios, { AxiosError } from "axios";
 import axiosRetry from "axios-retry";
 import config from "../config";

@@ -5,10 +5,13 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from "graphql";
-import { Author } from "../data";
 import { AuthoredApi } from "../api/authored";
 import { SubmissionType } from "./submission";
 import { getSubmissions } from "../api/executor";
+
+export interface Author {
+  name: string;
+}
 
 export const AuthorType = new GraphQLObjectType<Author>({
   name: "Author",

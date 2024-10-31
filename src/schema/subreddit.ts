@@ -7,8 +7,11 @@ import {
 } from "graphql";
 import { NewApi } from "../api/new";
 import { SubmissionType } from "./submission";
-import { Subreddit } from "../data";
 import { getSubmissions } from "../api/executor";
+
+export interface Subreddit {
+  name: string;
+}
 
 export const SubredditType = new GraphQLObjectType<Subreddit>({
   name: "Subreddit",

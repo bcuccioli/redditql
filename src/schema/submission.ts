@@ -1,7 +1,15 @@
 import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import { Author } from "./author";
 import { AuthorType } from "./author";
-import { Submission } from "../data";
+import { Subreddit } from "./subreddit";
 import { SubredditType } from "./subreddit";
+
+export interface Submission {
+  id: string;
+  title: string;
+  author: Author;
+  subreddit: Subreddit;
+}
 
 export const SubmissionType: GraphQLObjectType =
   new GraphQLObjectType<Submission>({
