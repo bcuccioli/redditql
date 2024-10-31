@@ -6,16 +6,9 @@ import {
   GraphQLID,
 } from "graphql";
 import { Author, Subreddit, Submission } from "./data";
-import { getSubmissions } from "./api/executor";
+import { AuthoredApi } from "./api/authored";
 import { NewApi } from "./api/new";
-
-const AuthorType = new GraphQLObjectType<Author>({
-  name: "Author",
-  fields: () => ({
-    id: { type: GraphQLID },
-    name: { type: GraphQLString },
-  }),
-});
+import { getSubmissions } from "./api/executor";
 
 const SubmissionType: GraphQLObjectType = new GraphQLObjectType<Submission>({
   name: "Submission",
@@ -29,6 +22,20 @@ const SubmissionType: GraphQLObjectType = new GraphQLObjectType<Submission>({
     subreddit: {
       type: SubredditType,
       resolve: (submission) => submission.subreddit,
+    },
+  }),
+});
+
+const AuthorType = new GraphQLObjectType<Author>({
+  name: "Author",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    submissions: {
+      type: new GraphQLList(SubmissionType),
+      resolve: async (author) => {
+        return await getSubmissions(new AuthoredApi(author.name));
+      },
     },
   }),
 });
@@ -57,8 +64,8 @@ const RootQuery = new GraphQLObjectType({
     },
     author: {
       type: AuthorType,
-      args: { id: { type: GraphQLID } },
-      resolve: (_, _args: { id: string }) => undefined,
+      args: { name: { type: GraphQLString } },
+      resolve: (_, args: { name: string }) => ({ name: args.name }),
     },
   },
 });
