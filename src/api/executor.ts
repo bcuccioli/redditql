@@ -3,7 +3,7 @@ import { Submission } from "../schema/submission";
 import axios, { AxiosError } from "axios";
 import axiosRetry from "axios-retry";
 import config from "../config";
-import { getAccessToken } from "./util";
+import { getAccessToken } from "./token";
 import { z } from "zod";
 
 const ApiResultSchema = z.object({
