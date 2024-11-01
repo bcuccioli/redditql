@@ -9,10 +9,13 @@ import { NewApi } from "../api/new";
 import { SearchApi } from "../api/search";
 import { SubmissionType } from "./submission";
 import { getSubmissions } from "../api/executor";
+import { parseFilter } from "../util/filter";
 
 interface Args {
   limit?: number;
   query?: string;
+  include?: string;
+  exclude?: string[];
 }
 
 export interface Subreddit {
@@ -29,14 +32,20 @@ export const SubredditType = new GraphQLObjectType<Subreddit>({
       args: {
         limit: { type: GraphQLInt },
         query: { type: GraphQLString },
+        include: { type: GraphQLString },
+        exclude: { type: new GraphQLList(GraphQLString) },
       },
       resolve: async (subreddit, args: Args) => {
-        const { limit, query } = args;
+        const { limit, query, include, exclude } = args;
         const api =
           query !== undefined
             ? new SearchApi(subreddit.name, query, limit)
             : new NewApi(subreddit.name, limit);
-        return await getSubmissions(api);
+        const x = await getSubmissions(api, {
+          includes: parseFilter(include),
+          excludes: exclude || [],
+        });
+        return x;
       },
     },
   }),

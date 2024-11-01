@@ -1,4 +1,5 @@
 import Api from "./api";
+import { FilterArgs, passesFilter } from "../util/filter";
 import { Submission } from "../schema/submission";
 import axios, { AxiosError } from "axios";
 import axiosRetry from "axios-retry";
@@ -65,7 +66,7 @@ async function genPage(api: Api, cursor: string | null) {
   return page;
 }
 
-export async function getSubmissions(api: Api) {
+export async function getSubmissions(api: Api, filter: FilterArgs) {
   let cursor: string | null = null;
 
   let submissions: Submission[] = [];
@@ -81,7 +82,7 @@ export async function getSubmissions(api: Api) {
     }));
 
     const filtered = submissionEdges.filter(
-      (e) => e.author.name !== "[deleted]"
+      (e) => e.author.name !== "[deleted]" && passesFilter(filter, e.title)
     );
 
     submissions = submissions.concat(filtered);
