@@ -25,5 +25,14 @@ export const SubmissionType: GraphQLObjectType =
         type: SubredditType,
         resolve: (submission) => submission.subreddit,
       },
+      link: {
+        type: GraphQLString,
+        resolve: (submission) => {
+          return (
+            `https://old.reddit.com/r/${submission.subreddit.name}` +
+            `/comments/${submission.id}`
+          );
+        },
+      },
     }),
   });
