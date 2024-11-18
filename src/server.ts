@@ -1,15 +1,7 @@
 import { createHandler } from "graphql-http/lib/use/express";
+import env from "./util/env";
 import express from "express";
 import schema from "./schema/root";
-
-function env(name: string) {
-  const value = process.env[name];
-  if (value === undefined) {
-    console.error(`Missing environment variable: ${name}`);
-    process.exit(1);
-  }
-  return value;
-}
 
 const app = express();
 
