@@ -1,3 +1,4 @@
+import Context from "../context";
 import {
   GraphQLID,
   GraphQLInt,
@@ -35,13 +36,13 @@ export const SubredditType = new GraphQLObjectType<Subreddit>({
         include: { type: GraphQLString },
         exclude: { type: new GraphQLList(GraphQLString) },
       },
-      resolve: async (subreddit, args: Args) => {
+      resolve: async (subreddit, args: Args, context: Context) => {
         const { limit, query, include, exclude } = args;
         const api =
           query !== undefined
             ? new SearchApi(subreddit.name, query, limit)
             : new NewApi(subreddit.name, limit);
-        const x = await getSubmissions(api, {
+        const x = await getSubmissions(api, context, {
           includes: parseFilter(include),
           excludes: exclude || [],
         });

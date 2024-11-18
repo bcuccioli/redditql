@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../config";
+import Context from "../context";
 import { z } from "zod";
 
 /**
@@ -7,16 +7,16 @@ import { z } from "zod";
  * account, fetch an access token, which is an ephemeral token needed for
  * querying the Reddit API.
  */
-export async function getAccessToken(refreshToken: string) {
-  const clientId = config().client_id;
-  const clientSecret = config().client_secret;
-  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+export async function getAccessToken(context: Context) {
+  const auth = Buffer.from(
+    `${context.client_id}:${context.client_secret}`
+  ).toString("base64");
 
   const response = await axios.post(
     "https://www.reddit.com/api/v1/access_token",
     new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token: refreshToken,
+      refresh_token: context.refresh_token,
     }).toString(),
     {
       headers: {

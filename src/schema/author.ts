@@ -6,6 +6,7 @@ import {
   GraphQLString,
 } from "graphql";
 import { AuthoredApi } from "../api/authored";
+import Context from "../context";
 import { SubmissionType } from "./submission";
 import { getSubmissions } from "../api/executor";
 import { parseFilter } from "../util/filter";
@@ -32,12 +33,16 @@ export const AuthorType = new GraphQLObjectType<Author>({
         include: { type: GraphQLString },
         exclude: { type: new GraphQLList(GraphQLString) },
       },
-      resolve: async (author, args: Args) => {
+      resolve: async (author, args: Args, context: Context) => {
         const { limit, include, exclude } = args;
-        return await getSubmissions(new AuthoredApi(author.name, limit), {
-          includes: parseFilter(include),
-          excludes: exclude || [],
-        });
+        return await getSubmissions(
+          new AuthoredApi(author.name, limit),
+          context,
+          {
+            includes: parseFilter(include),
+            excludes: exclude || [],
+          }
+        );
       },
     },
   }),

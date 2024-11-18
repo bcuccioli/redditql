@@ -1,9 +1,9 @@
 import Api from "./api";
+import Context from "../context";
 import { FilterArgs, passesFilter } from "../util/filter";
 import { Submission } from "../schema/submission";
 import axios, { AxiosError } from "axios";
 import axiosRetry from "axios-retry";
-import config from "../config";
 import { getAccessToken } from "./token";
 import { z } from "zod";
 
@@ -28,7 +28,7 @@ const ApiResultSchema = z.object({
   }),
 });
 
-async function genPage(api: Api, cursor: string | null) {
+async function genPage(api: Api, context: Context, cursor: string | null) {
   const axiosInstance = axios.create();
 
   axiosRetry(axiosInstance, {
@@ -41,12 +41,12 @@ async function genPage(api: Api, cursor: string | null) {
     },
   });
 
-  const token = await getAccessToken(config().refresh_token);
+  const token = await getAccessToken(context);
 
   const response = await axiosInstance.get(api.uri(cursor), {
     headers: {
       Authorization: `bearer ${token}`,
-      "User-Agent": config().user_agent,
+      "User-Agent": "redditql",
     },
   });
 
@@ -66,13 +66,17 @@ async function genPage(api: Api, cursor: string | null) {
   return page;
 }
 
-export async function getSubmissions(api: Api, filter: FilterArgs) {
+export async function getSubmissions(
+  api: Api,
+  context: Context,
+  filter: FilterArgs
+) {
   let cursor: string | null = null;
 
   let submissions: Submission[] = [];
 
   while (true) {
-    const page = await genPage(api, cursor);
+    const page = await genPage(api, context, cursor);
 
     const submissionEdges = page.edges.map((e) => ({
       id: e.id,
