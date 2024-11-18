@@ -28,7 +28,7 @@ const ApiResultSchema = z.object({
   }),
 });
 
-async function genPage(api: Api, context: Context, cursor: string | null) {
+async function genPage(api: Api, access_token: string, cursor: string | null) {
   const axiosInstance = axios.create();
 
   axiosRetry(axiosInstance, {
@@ -41,11 +41,9 @@ async function genPage(api: Api, context: Context, cursor: string | null) {
     },
   });
 
-  const token = await getAccessToken(context);
-
   const response = await axiosInstance.get(api.uri(cursor), {
     headers: {
-      Authorization: `bearer ${token}`,
+      Authorization: `bearer ${access_token}`,
       "User-Agent": "redditql",
     },
   });
@@ -71,12 +69,14 @@ export async function getSubmissions(
   context: Context,
   filter: FilterArgs
 ) {
+  const access_token = await getAccessToken(context);
+
   let cursor: string | null = null;
 
   let submissions: Submission[] = [];
 
   while (true) {
-    const page = await genPage(api, context, cursor);
+    const page = await genPage(api, access_token, cursor);
 
     const submissionEdges = page.edges.map((e) => ({
       id: e.id,
