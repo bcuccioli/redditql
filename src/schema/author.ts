@@ -36,8 +36,8 @@ export const AuthorType = new GraphQLObjectType<Author>({
       resolve: async (author, args: Args, context: Context) => {
         const { limit, include, exclude } = args;
         return await getSubmissions(
-          new AuthoredApi(author.name, limit),
           context,
+          new AuthoredApi(author.name, limit),
           {
             includes: parseFilter(include),
             excludes: exclude || [],

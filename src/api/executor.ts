@@ -28,7 +28,7 @@ const ApiResultSchema = z.object({
   }),
 });
 
-async function genPage(api: Api, access_token: string, cursor: string | null) {
+async function genPage(access_token: string, api: Api, cursor: string | null) {
   const axiosInstance = axios.create();
 
   axiosRetry(axiosInstance, {
@@ -65,8 +65,8 @@ async function genPage(api: Api, access_token: string, cursor: string | null) {
 }
 
 export async function getSubmissions(
-  api: Api,
   context: Context,
+  api: Api,
   filter: FilterArgs
 ) {
   const access_token = await getAccessToken(context);
@@ -76,7 +76,7 @@ export async function getSubmissions(
   let submissions: Submission[] = [];
 
   while (true) {
-    const page = await genPage(api, access_token, cursor);
+    const page = await genPage(access_token, api, cursor);
 
     const submissionEdges = page.edges.map((e) => ({
       id: e.id,

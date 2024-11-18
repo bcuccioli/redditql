@@ -42,7 +42,7 @@ export const SubredditType = new GraphQLObjectType<Subreddit>({
           query !== undefined
             ? new SearchApi(subreddit.name, query, limit)
             : new NewApi(subreddit.name, limit);
-        const x = await getSubmissions(api, context, {
+        const x = await getSubmissions(context, api, {
           includes: parseFilter(include),
           excludes: exclude || [],
         });
