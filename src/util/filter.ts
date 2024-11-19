@@ -53,12 +53,13 @@ export function passesFilter(args: FilterArgs, str: string) {
     return str.includes(term);
   };
 
-  if (
-    args.includes.length > 0 &&
-    !args.includes.every((l) => l.some(matcher))
-  ) {
+  // If not every include sublist finds some match, return false. Note: if the
+  // includes list is empty, `[].every(...)` is always true, so this will be
+  // ignored.
+  if (!args.includes.every((l) => l.some(matcher))) {
     return false;
   }
 
+  // Return true iff the exclude list does not find a single match.
   return !args.excludes.some(matcher);
 }
