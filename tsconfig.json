@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
+    "rootDir": "./src",
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2018",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "allowJs": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -13,5 +16,12 @@
     "typeRoots": ["./node_modules/@types"]
   },
   "lib": ["es2015"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "__tests__/**/*",
+    "dist",
+      "node_modules",
+    "*.config.*",
+    "*.mjs"
+  ]
 }

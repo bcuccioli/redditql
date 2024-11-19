@@ -1,4 +1,4 @@
-import RedditQLClient from "./client";
+import { RedditQLClient } from "./client";
 import env from "./util/env";
 import { z } from "zod";
 

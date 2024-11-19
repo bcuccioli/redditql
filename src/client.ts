@@ -2,7 +2,7 @@ import { ZodSchema } from "zod";
 import { graphql } from "graphql";
 import schema from "./schema/root";
 
-export default class RedditQLClient {
+export class RedditQLClient {
   client_id: string;
   client_secret: string;
   refresh_token: string;
