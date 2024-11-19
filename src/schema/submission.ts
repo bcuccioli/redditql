@@ -1,4 +1,9 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+} from "graphql";
 import { Author } from "./author";
 import { AuthorType } from "./author";
 import { Subreddit } from "./subreddit";
@@ -8,7 +13,9 @@ export interface Submission {
   id: string;
   title: string;
   author: Author;
+  selftext: string;
   subreddit: Subreddit;
+  created_utc: number;
 }
 
 export const SubmissionType: GraphQLObjectType =
@@ -17,15 +24,10 @@ export const SubmissionType: GraphQLObjectType =
     fields: () => ({
       id: { type: GraphQLID },
       title: { type: GraphQLString },
-      author: {
-        type: AuthorType,
-        resolve: (submission) => submission.author,
-      },
-      subreddit: {
-        type: SubredditType,
-        resolve: (submission) => submission.subreddit,
-      },
-      link: {
+      author: { type: AuthorType },
+      selftext: { type: GraphQLString },
+      subreddit: { type: SubredditType },
+      url: {
         type: GraphQLString,
         resolve: (submission) => {
           return (
@@ -34,5 +36,6 @@ export const SubmissionType: GraphQLObjectType =
           );
         },
       },
+      created_utc: { type: GraphQLInt },
     }),
   });

@@ -82,7 +82,9 @@ export async function getSubmissions(
       id: e.id,
       title: e.title,
       author: { name: e.author },
+      selftext: e.selftext,
       subreddit: { name: e.subreddit },
+      created_utc: e.created_utc,
     }));
 
     const filtered = submissionEdges.filter(
